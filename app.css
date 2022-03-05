@@ -1,0 +1,39 @@
+@keyframes visible {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: .7;
+    }
+}
+.spinner {
+    left: 50%;
+    top: 50%;
+    opacity: 1;
+    
+}
+body {
+    background-color: whitesmoke;
+    
+}
+#spinner {
+    width: 100%;
+    z-index: 99;
+    position: absolute;
+    height: 100%;
+    background-color: black;
+    opacity: .7;
+    animation: visible 250ms;
+    display: none;
+    
+}
+#logoutbtn {
+    background-color: red;
+    color: white;
+    position: absolute;
+    bottom: 5%;
+    right: 5%;
+}
+.material-icons {
+    vertical-align: -6px; /*Change this to adjust the icon*/
+}
