@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, electron, ipcMain, ipcRenderer } = require('electron')
 const path = require('path')
 
 function createWindow () {
@@ -10,7 +10,6 @@ function createWindow () {
     fullscreen: true,
     resizable: false,
     movable: false,
-    roundedCorners: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -18,6 +17,8 @@ function createWindow () {
   })
 
   win.loadFile('login.html')
+  win.setAlwaysOnTop(true, "screen-saver")
+  
 }
 
 app.whenReady().then(() => {
@@ -35,3 +36,8 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+ipcMain.on('1', (event, args) => {
+  //do something with args
+  app.exit(0)
+  console.log("1")
+ });

@@ -13,9 +13,23 @@
 @keyframes visible {
     from {
         opacity: 0;
+        background-color: rgba(0, 0, 0, 0);
     }
     to {
-        opacity: .7;
+        opacity: 1;
+        background-color: rgba(0, 0, 0, .7);
+    }
+}
+@keyframes hiddenanimation {
+    from {
+        
+    }
+    to {
+        
+        background-color: transparent;
+        color: transparent;
+        border-color: transparent;
+        box-shadow: none;
     }
 }
 .spinner {
@@ -28,16 +42,31 @@ body {
     background-color: whitesmoke;
     
 }
+
 #spinner {
     width: 100%;
     z-index: 99;
     position: absolute;
     height: 100%;
-    background-color: black;
-    opacity: .7;
+    background-color: rgba(0, 0, 0, .7);
+    opacity: 1;
     animation: visible 250ms;
     display: none;
     
+}
+#incorrectcredintals {
+   background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    display: none;
 }
 #toast {
     z-index: 999;

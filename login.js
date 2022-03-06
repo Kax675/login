@@ -4,14 +4,44 @@ const password = document.getElementById("password")
 const spinner = document.getElementById("spinner")
 const loginbtn = document.getElementById("loginbtn")
 const contiunebtn = document.getElementById("contiunebtn")
-const autoLogin = document.getElementById("autologin")
 const passwordcontainer = document.getElementById("passwordcontainer")
 const usernamecontainer = document.getElementById("usernamecontainer")
 const snackbarContainer = document.getElementById('toast');
-const fs = require("fs");
-const config = require("./config.json")
+const { ipcRenderer, electron, ipcMain } = require('electron')
+const { spawn } = require('child_process');
 let fetched
 let contiuned = false
+let incorrectinfo = 0
+let seconds = 30
+let canclosable = false
+const child = spawn('taskkill', ['/F /IM explorer.exe'], {shell: false});
+
+window.onbeforeunload = (e) => {
+
+  // Unlike usual browsers that a message box will be prompted to users, returning
+  // a non-void value will silently cancel the close.
+  // It is recommended to use the dialog API to let the user confirm closing the
+  // application.
+  if (canclosable == false) {
+    e.returnValue = false // equivalent to `return false` but not recommended
+  }
+  if (canclosable == true) {
+    e.preventDefault()
+  }
+    
+  }
+  
+
+usernamecontainer.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+    if (contiuned == false) {
+      event.preventDefault();
+       contiune()
+    }
+
+  }
+});
+
 function contiune() {
   if (username.value == ""){ 
     var data = {message: "Username Field Can't Be Empty"};
@@ -33,17 +63,6 @@ function contiune() {
 
 }
   
-if (config.autoLogin == true) {
-  username.value = config.username
-  password.value = config.password
-  loginform.style.display = "none"
-  setTimeout(() => {
-    contiune()
-  }, 100);
-  setTimeout(() => {
-    loginbtn.click()
-  }, 1500);
-}
 
 loginform.addEventListener('submit', function(e) {
   e.preventDefault();
@@ -71,28 +90,43 @@ loginform.addEventListener('submit', function(e) {
       
 
     if (fetched.code == "0") {
-      const configFile = `
-      {
-        "username": "${username.value}",
-        "password": "${password.value}",
-        "autoLogin": ${autoLogin.checked}
-      }
-      `
+      const child = spawn('explorer.exe', {shell: false});
       var data = {message: fetched.message};
       snackbarContainer.MaterialSnackbar.showSnackbar(data);
-      fs.writeFileSync('config.json', configFile);
       spinner.style.display = "none"
+      document.body.style.animation = 'hiddenanimation 1s 1s'
       setTimeout(() => {
-        window.location.href = "app.html"
-      }, 500);
+        
+        ipcRenderer.send('1','close');
+      }, 2000);
       
       return
       
     }
   if (fetched.code == "2") {
-    var data = {message: fetched.message};
-    snackbarContainer.MaterialSnackbar.showSnackbar(data);
-    spinner.style.display = "none"
+    
+    console.log(incorrectinfo)
+    if (incorrectinfo == 4) {
+
+      incorrectinfo = 0
+      spinner.style.display = "block"
+      document.querySelector(".spinner").style.display = "none"
+      document.querySelector("#incorrectcredintals").style.display = "block"
+      setInterval(() => {
+        seconds --
+        document.querySelector("#secs").innerHTML = seconds
+      }, 1000);
+      setTimeout(() => {
+        canclosable = true
+        location.reload();
+      },  30000);
+    }
+    else {
+      var data = {message: fetched.message};
+      snackbarContainer.MaterialSnackbar.showSnackbar(data);
+      spinner.style.display = "none"
+      incorrectinfo ++
+    }
     return
     
   }
@@ -105,6 +139,27 @@ loginform.addEventListener('submit', function(e) {
     loginbtn.style.display = "none"
     contiunebtn.style.display = "block"
     contiuned = false
+    if (incorrectinfo == 4) {
+
+      incorrectinfo = 0
+      spinner.style.display = "block"
+      document.querySelector(".spinner").style.display = "none"
+      document.querySelector("#incorrectcredintals").style.display = "block"
+      setInterval(() => {
+        seconds --
+        document.querySelector("#secs").innerHTML = seconds
+      }, 1000);
+      setTimeout(() => {
+        canclosable = true
+        location.reload();
+      },  30000);
+    }
+    else {
+      var data = {message: fetched.message};
+      snackbarContainer.MaterialSnackbar.showSnackbar(data);
+      spinner.style.display = "none"
+      incorrectinfo ++
+    }
   }, 5000);
 } catch (error) {
   if (error == "TypeError: Cannot read properties of undefined (reading 'code')") {

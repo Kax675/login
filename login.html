@@ -12,6 +12,10 @@
 </head>
 <body>
   <div id="spinner">
+    <div id="incorrectcredintals">
+      <h1>You Entered Invalid Credentials 5 Times In A Row</h1>
+      <p>Please Try Again In <span id="secs">30</span> Seconds</p>
+    </div>
     <div class="mdl-spinner mdl-js-spinner is-active spinner"></div>
   </div>
   <div id="toast" class="mdl-js-snackbar mdl-snackbar">
@@ -30,10 +34,6 @@
       <label class="mdl-textfield__label" for="password">Password</label>
   </div>
 <br>
-<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="autologin">
-  <input type="checkbox" id="autologin" class="mdl-switch__input" checked>
-  <span class="mdl-switch__label">Auto Login</span>
-</label>
 
     <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit" id="loginbtn" value="Submit">Login</button>
     <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="button" onclick="contiune()"  id="contiunebtn">Contiune</button>
